@@ -1,33 +1,63 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import {
-  View, Text, ScrollView, TouchableOpacity,
-  StyleSheet, FlatList, Image, StatusBar, TextInput,
+  View, Text, ScrollView, TouchableOpacity, StyleSheet,
+  FlatList, Image, StatusBar, Dimensions, NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { categories, products } from '../constants/data';
 import ProductCard from '../components/ProductCard';
+import SignageLogo from '../components/SignageLogo';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+
+const { width: W } = Dimensions.get('window');
+
+const banners = [
+  {
+    id: '1',
+    image: 'https://picsum.photos/seed/hero-sign1/900/500',
+    eyebrow: 'FREE SHIPPING OVER $75',
+    title: 'Make Your Brand\nUnmissable',
+    cta: 'Shop Now',
+  },
+  {
+    id: '2',
+    image: 'https://picsum.photos/seed/hero-sign2/900/500',
+    eyebrow: 'NEW ARRIVALS',
+    title: 'Fresh Signage\nfor Spring',
+    cta: 'Explore New',
+  },
+  {
+    id: '3',
+    image: 'https://picsum.photos/seed/hero-sign3/900/500',
+    eyebrow: 'TRADE SHOW SEASON',
+    title: 'Stand Out at\nEvery Event',
+    cta: 'See Trade Show',
+  },
+];
 
 export default function HomeScreen({ navigation }: any) {
   const { itemCount } = useCart();
-  const { user } = useAuth();
+  const [activeBanner, setActiveBanner] = useState(0);
+  const bannerRef = useRef<FlatList>(null);
 
-  const newArrivals = products.filter(p => p.newArrival);
-  const bestSellers = products.filter(p => p.popular);
-  const featuredProduct = products[1]; // Retractable Banner Stand
+  const newArrivals = products.filter(p => p.newArrival).slice(0, 6);
+  const bestSellers = products.filter(p => p.popular).slice(0, 6);
+  const onSale      = products.filter(p => p.discount).slice(0, 4);
+
+  const onBannerScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setActiveBanner(Math.round(e.nativeEvent.contentOffset.x / W));
+  };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.root} edges={['top']}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.white} />
 
-      {/* Top bar */}
+      {/* ── Top Bar ─────────────────────────────────────── */}
       <View style={styles.topBar}>
-        <View>
-          <Text style={styles.logo}>Signage<Text style={styles.logoDot}>.com</Text></Text>
-        </View>
+        <SignageLogo size="md" />
         <View style={styles.topActions}>
           <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Catalog')}>
             <MaterialIcons name="search" size={24} color={Colors.text} />
@@ -35,120 +65,104 @@ export default function HomeScreen({ navigation }: any) {
           <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Cart')}>
             <MaterialIcons name="shopping-bag" size={24} color={Colors.text} />
             {itemCount > 0 && (
-              <View style={styles.cartBadge}>
-                <Text style={styles.cartBadgeText}>{itemCount}</Text>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{itemCount > 9 ? '9+' : itemCount}</Text>
               </View>
             )}
           </TouchableOpacity>
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
 
-        {/* Search bar */}
-        <TouchableOpacity
-          style={styles.searchBar}
-          onPress={() => navigation.navigate('Catalog')}
-          activeOpacity={0.8}
-        >
-          <MaterialIcons name="search" size={20} color={Colors.textMuted} />
-          <Text style={styles.searchPlaceholder}>Search products...</Text>
-        </TouchableOpacity>
-
-        {/* Hero Banner */}
-        <View style={styles.hero}>
-          <Image
-            source={{ uri: 'https://picsum.photos/seed/hero-signage/800/420' }}
-            style={styles.heroImage}
-            resizeMode="cover"
+        {/* ── Hero Carousel ───────────────────────────── */}
+        <View>
+          <FlatList
+            ref={bannerRef}
+            data={banners}
+            keyExtractor={b => b.id}
+            horizontal pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={onBannerScroll}
+            scrollEventThrottle={16}
+            renderItem={({ item }) => (
+              <View style={styles.heroBanner}>
+                <Image source={{ uri: item.image }} style={styles.heroImage} resizeMode="cover" />
+                <View style={styles.heroOverlay}>
+                  <Text style={styles.heroEyebrow}>{item.eyebrow}</Text>
+                  <Text style={styles.heroTitle}>{item.title}</Text>
+                  <TouchableOpacity
+                    style={styles.heroBtn}
+                    onPress={() => navigation.navigate('Catalog')}
+                  >
+                    <Text style={styles.heroBtnText}>{item.cta}</Text>
+                    <MaterialIcons name="arrow-forward" size={14} color={Colors.white} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           />
-          <View style={styles.heroOverlay}>
-            <Text style={styles.heroEyebrow}>SPRING COLLECTION</Text>
-            <Text style={styles.heroTitle}>Make Your{'\n'}Brand Unmissable</Text>
-            <TouchableOpacity
-              style={styles.heroBtn}
-              onPress={() => navigation.navigate('Catalog')}
-            >
-              <Text style={styles.heroBtnText}>Shop Now</Text>
-            </TouchableOpacity>
+          {/* Dots */}
+          <View style={styles.heroDots}>
+            {banners.map((_, i) => (
+              <TouchableOpacity
+                key={i}
+                onPress={() => bannerRef.current?.scrollToIndex({ index: i, animated: true })}
+              >
+                <View style={[styles.heroDot, i === activeBanner && styles.heroDotActive]} />
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
 
-        {/* Free shipping banner */}
-        <View style={styles.shippingBanner}>
-          <MaterialIcons name="local-shipping" size={16} color={Colors.success} />
-          <Text style={styles.shippingBannerText}>
-            Free shipping on orders over <Text style={{ fontWeight: '700' }}>$75</Text>
-          </Text>
+        {/* ── Perks strip ─────────────────────────────── */}
+        <View style={styles.perks}>
+          {[
+            { icon: 'local-shipping',  text: 'Free Shipping $75+' },
+            { icon: 'schedule',        text: 'Ships in 2–5 Days' },
+            { icon: 'verified',        text: 'Quality Guarantee' },
+          ].map((p, i) => (
+            <React.Fragment key={i}>
+              <View style={styles.perk}>
+                <MaterialIcons name={p.icon as any} size={18} color={Colors.primary} />
+                <Text style={styles.perkText}>{p.text}</Text>
+              </View>
+              {i < 2 && <View style={styles.perkDivider} />}
+            </React.Fragment>
+          ))}
         </View>
 
-        {/* Categories */}
+        {/* ── Categories ──────────────────────────────── */}
         <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Shop by Category</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Catalog')}>
-              <Text style={styles.seeAll}>See all</Text>
-            </TouchableOpacity>
+          <View style={styles.sectionRow}>
+            <Text style={styles.sectionTitle}>Browse Categories</Text>
           </View>
           <FlatList
             data={categories}
             keyExtractor={c => c.id}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categoryList}
+            contentContainerStyle={styles.hPad}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={styles.categoryCard}
+                style={styles.catCard}
                 onPress={() => navigation.navigate('Catalog', { category: item.name })}
                 activeOpacity={0.85}
               >
-                <Image
-                  source={{ uri: item.image }}
-                  style={styles.categoryImage}
-                  resizeMode="cover"
-                />
-                <View style={styles.categoryOverlay} />
-                <Text style={styles.categoryName}>{item.name}</Text>
+                <Image source={{ uri: item.image }} style={styles.catImage} resizeMode="cover" />
+                <View style={styles.catOverlay} />
+                <View style={styles.catInfo}>
+                  <Text style={styles.catName}>{item.name}</Text>
+                  <Text style={styles.catCount}>{item.count} items</Text>
+                </View>
               </TouchableOpacity>
             )}
           />
         </View>
 
-        {/* Featured Product */}
+        {/* ── New Arrivals ─────────────────────────────── */}
         <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Featured Product</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.featuredCard}
-            onPress={() => navigation.navigate('ProductDetail', { product: featuredProduct })}
-            activeOpacity={0.92}
-          >
-            <Image
-              source={{ uri: featuredProduct.images[0] }}
-              style={styles.featuredImage}
-              resizeMode="cover"
-            />
-            <View style={styles.featuredInfo}>
-              <Text style={styles.featuredCategory}>{featuredProduct.category}</Text>
-              <Text style={styles.featuredName}>{featuredProduct.name}</Text>
-              <Text style={styles.featuredDesc} numberOfLines={2}>
-                {featuredProduct.description}
-              </Text>
-              <View style={styles.featuredFooter}>
-                <Text style={styles.featuredPrice}>From ${featuredProduct.basePrice.toFixed(2)}</Text>
-                <View style={styles.featuredCta}>
-                  <Text style={styles.featuredCtaText}>Shop Now</Text>
-                  <MaterialIcons name="arrow-forward" size={14} color={Colors.white} />
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* New Arrivals */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
+          <View style={styles.sectionRow}>
             <Text style={styles.sectionTitle}>New Arrivals</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Catalog')}>
               <Text style={styles.seeAll}>See all</Text>
@@ -159,9 +173,9 @@ export default function HomeScreen({ navigation }: any) {
             keyExtractor={p => p.id}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalList}
+            contentContainerStyle={styles.hPad}
             renderItem={({ item }) => (
-              <View style={{ width: 180 }}>
+              <View style={{ width: 175 }}>
                 <ProductCard
                   product={item}
                   onPress={() => navigation.navigate('ProductDetail', { product: item })}
@@ -171,9 +185,30 @@ export default function HomeScreen({ navigation }: any) {
           />
         </View>
 
-        {/* Best Sellers */}
+        {/* ── Featured banner ──────────────────────────── */}
+        <TouchableOpacity
+          style={styles.featureBanner}
+          onPress={() => navigation.navigate('Catalog', { category: 'Trade Show' })}
+          activeOpacity={0.92}
+        >
+          <Image
+            source={{ uri: 'https://picsum.photos/seed/feature-tradeshow/900/400' }}
+            style={styles.featureBannerImage}
+            resizeMode="cover"
+          />
+          <View style={styles.featureBannerOverlay}>
+            <Text style={styles.featureBannerEyebrow}>TRADE SHOW COLLECTION</Text>
+            <Text style={styles.featureBannerTitle}>Everything you need{'\n'}to stand out</Text>
+            <View style={styles.featureBannerBtn}>
+              <Text style={styles.featureBannerBtnText}>Shop Trade Show</Text>
+              <MaterialIcons name="arrow-forward" size={14} color={Colors.primary} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        {/* ── Best Sellers ─────────────────────────────── */}
         <View style={styles.section}>
-          <View style={styles.sectionHeader}>
+          <View style={styles.sectionRow}>
             <Text style={styles.sectionTitle}>Best Sellers</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Catalog')}>
               <Text style={styles.seeAll}>See all</Text>
@@ -191,189 +226,170 @@ export default function HomeScreen({ navigation }: any) {
           </View>
         </View>
 
-        {/* Trust Badges */}
+        {/* ── On Sale ──────────────────────────────────── */}
+        {onSale.length > 0 && (
+          <View style={styles.section}>
+            <View style={styles.saleHeader}>
+              <View style={styles.saleBadge}>
+                <MaterialIcons name="local-offer" size={14} color={Colors.white} />
+                <Text style={styles.saleBadgeText}>ON SALE</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate('Catalog')}>
+                <Text style={styles.seeAll}>See all</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.saleList}>
+              {onSale.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  horizontal
+                  onPress={() => navigation.navigate('ProductDetail', { product })}
+                />
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* ── Trust Row ─────────────────────────────────── */}
         <View style={styles.trustRow}>
           {[
-            { icon: 'verified', label: 'Quality Guarantee' },
-            { icon: 'local-shipping', label: 'Fast Delivery' },
-            { icon: 'replay', label: 'Easy Reorders' },
-            { icon: 'support-agent', label: '24/7 Support' },
-          ].map((b, i) => (
+            { icon: 'verified-user', title: 'Quality Guarantee', sub: '100% satisfaction or we reprint' },
+            { icon: 'support-agent', title: '24/7 Support',      sub: 'Real experts, real answers' },
+            { icon: 'replay',        title: 'Easy Reorders',     sub: 'One tap to reorder past jobs' },
+          ].map((t, i) => (
             <View key={i} style={styles.trustItem}>
-              <MaterialIcons name={b.icon as any} size={22} color={Colors.accent} />
-              <Text style={styles.trustLabel}>{b.label}</Text>
+              <View style={styles.trustIcon}>
+                <MaterialIcons name={t.icon as any} size={22} color={Colors.primary} />
+              </View>
+              <Text style={styles.trustTitle}>{t.title}</Text>
+              <Text style={styles.trustSub}>{t.sub}</Text>
             </View>
           ))}
         </View>
 
+        <View style={{ height: 32 }} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.white },
+  root: { flex: 1, backgroundColor: Colors.white },
+
   topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: 16, paddingVertical: 12,
+    borderBottomWidth: 1, borderBottomColor: Colors.border,
     backgroundColor: Colors.white,
   },
-  logo: { fontSize: 22, fontWeight: '800', color: Colors.text, letterSpacing: -0.5 },
-  logoDot: { color: Colors.accent },
-  topActions: { flexDirection: 'row', gap: 4 },
-  iconBtn: { padding: 6, position: 'relative' },
-  cartBadge: {
-    position: 'absolute', top: 2, right: 2,
-    backgroundColor: Colors.accent,
-    borderRadius: 8, minWidth: 16, height: 16,
-    justifyContent: 'center', alignItems: 'center',
+  topActions: { flexDirection: 'row', gap: 2 },
+  iconBtn: { padding: 7, position: 'relative' },
+  badge: {
+    position: 'absolute', top: 4, right: 4,
+    backgroundColor: Colors.primary, borderRadius: 8,
+    minWidth: 16, height: 16, justifyContent: 'center', alignItems: 'center',
   },
-  cartBadgeText: { color: Colors.white, fontSize: 9, fontWeight: '800' },
+  badgeText: { color: Colors.white, fontSize: 9, fontWeight: '800' },
 
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginHorizontal: 16,
-    marginTop: 14,
-    marginBottom: 16,
-    backgroundColor: Colors.surfaceAlt,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    height: 44,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  searchPlaceholder: { fontSize: 14, color: Colors.textMuted },
-
-  hero: {
-    marginHorizontal: 16,
-    borderRadius: 16,
-    overflow: 'hidden',
-    height: 220,
-  },
+  heroBanner: { width: W, height: 240 },
   heroImage: { width: '100%', height: '100%' },
   heroOverlay: {
     position: 'absolute', inset: 0,
     backgroundColor: 'rgba(0,0,0,0.42)',
-    padding: 22,
-    justifyContent: 'flex-end',
+    padding: 24, justifyContent: 'flex-end',
   },
   heroEyebrow: {
-    fontSize: 10, fontWeight: '700', color: Colors.accent,
-    letterSpacing: 2, marginBottom: 6,
+    fontSize: 10, fontWeight: '800', color: Colors.primary,
+    letterSpacing: 2, marginBottom: 8,
   },
-  heroTitle: {
-    fontSize: 26, fontWeight: '800', color: Colors.white,
-    lineHeight: 32, marginBottom: 16,
-  },
+  heroTitle: { fontSize: 28, fontWeight: '900', color: Colors.white, lineHeight: 34, marginBottom: 18 },
   heroBtn: {
-    backgroundColor: Colors.white,
-    paddingHorizontal: 20, paddingVertical: 10,
-    borderRadius: 8, alignSelf: 'flex-start',
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    backgroundColor: Colors.primary,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 18, paddingVertical: 10, borderRadius: 8,
   },
-  heroBtnText: { color: Colors.text, fontWeight: '700', fontSize: 13 },
+  heroBtnText: { color: Colors.white, fontWeight: '700', fontSize: 14 },
+  heroDots: {
+    flexDirection: 'row', justifyContent: 'center', gap: 6, paddingVertical: 12,
+  },
+  heroDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: Colors.border },
+  heroDotActive: { width: 20, backgroundColor: Colors.primary },
 
-  shippingBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 10,
-    marginHorizontal: 16,
-    marginTop: 14,
-    backgroundColor: '#F0FDF4',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#D1FAE5',
+  perks: {
+    flexDirection: 'row', alignItems: 'center',
+    marginHorizontal: 16, padding: 14,
+    borderWidth: 1, borderColor: Colors.border, borderRadius: 12,
   },
-  shippingBannerText: { fontSize: 13, color: Colors.success },
+  perk: { flex: 1, alignItems: 'center', gap: 4 },
+  perkText: { fontSize: 11, fontWeight: '600', color: Colors.textSecondary, textAlign: 'center' },
+  perkDivider: { width: 1, height: 30, backgroundColor: Colors.border },
 
   section: { marginTop: 28 },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    marginBottom: 14,
+  sectionRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: 16, marginBottom: 14,
   },
-  sectionTitle: { fontSize: 18, fontWeight: '700', color: Colors.text },
-  seeAll: { fontSize: 13, color: Colors.accent, fontWeight: '600' },
+  sectionTitle: { fontSize: 18, fontWeight: '800', color: Colors.text },
+  seeAll: { fontSize: 13, color: Colors.primary, fontWeight: '600' },
+  hPad: { paddingHorizontal: 16, gap: 12 },
 
-  categoryList: { paddingHorizontal: 16, gap: 10 },
-  categoryCard: {
-    width: 110, height: 80,
-    borderRadius: 10,
-    overflow: 'hidden',
-    position: 'relative',
+  catCard: {
+    width: 120, height: 88, borderRadius: 12, overflow: 'hidden', position: 'relative',
   },
-  categoryImage: { width: '100%', height: '100%' },
-  categoryOverlay: {
+  catImage: { width: '100%', height: '100%' },
+  catOverlay: { position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)' },
+  catInfo: { position: 'absolute', bottom: 8, left: 8, right: 8 },
+  catName: { fontSize: 12, fontWeight: '800', color: Colors.white },
+  catCount: { fontSize: 10, color: 'rgba(255,255,255,0.75)' },
+
+  featureBanner: {
+    marginHorizontal: 16, marginTop: 28,
+    borderRadius: 16, overflow: 'hidden', height: 180,
+  },
+  featureBannerImage: { width: '100%', height: '100%' },
+  featureBannerOverlay: {
     position: 'absolute', inset: 0,
-    backgroundColor: 'rgba(0,0,0,0.38)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 20, justifyContent: 'center',
   },
-  categoryName: {
-    position: 'absolute',
-    bottom: 8, left: 8, right: 8,
-    fontSize: 12, fontWeight: '700',
-    color: Colors.white,
-  },
-
-  featuredCard: {
-    marginHorizontal: 16,
-    borderRadius: 14,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  featuredImage: { width: '100%', height: 200 },
-  featuredInfo: { padding: 16 },
-  featuredCategory: {
-    fontSize: 10, color: Colors.textMuted,
-    fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4,
-  },
-  featuredName: { fontSize: 18, fontWeight: '700', color: Colors.text, marginBottom: 6 },
-  featuredDesc: { fontSize: 13, color: Colors.textSecondary, lineHeight: 19, marginBottom: 14 },
-  featuredFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  featuredPrice: { fontSize: 16, fontWeight: '700', color: Colors.text },
-  featuredCta: {
-    flexDirection: 'row', alignItems: 'center', gap: 4,
-    backgroundColor: Colors.accent,
+  featureBannerEyebrow: { fontSize: 10, fontWeight: '800', color: Colors.primary, letterSpacing: 2, marginBottom: 6 },
+  featureBannerTitle: { fontSize: 22, fontWeight: '900', color: Colors.white, lineHeight: 28, marginBottom: 16 },
+  featureBannerBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    backgroundColor: Colors.white, alignSelf: 'flex-start',
     paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8,
   },
-  featuredCtaText: { color: Colors.white, fontWeight: '700', fontSize: 13 },
+  featureBannerBtnText: { fontSize: 13, fontWeight: '700', color: Colors.primary },
 
-  horizontalList: { paddingHorizontal: 16, gap: 12 },
-
-  grid: {
-    flexDirection: 'row', flexWrap: 'wrap',
-    paddingHorizontal: 16, gap: 12,
-  },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 16, gap: 12 },
   gridItem: { width: '47.5%' },
 
+  saleHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: 16, marginBottom: 14,
+  },
+  saleBadge: {
+    flexDirection: 'row', alignItems: 'center', gap: 5,
+    backgroundColor: '#EA580C', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 6,
+  },
+  saleBadgeText: { color: Colors.white, fontWeight: '800', fontSize: 11, letterSpacing: 0.5 },
+  saleList: { paddingHorizontal: 16, gap: 10 },
+
   trustRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginHorizontal: 16,
-    marginTop: 28,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 12,
-    overflow: 'hidden',
+    flexDirection: 'row', marginHorizontal: 16, marginTop: 32, gap: 10,
   },
   trustItem: {
-    width: '50%',
-    alignItems: 'center',
-    paddingVertical: 16,
-    gap: 6,
-    borderRightWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: Colors.border,
+    flex: 1, alignItems: 'center', gap: 6,
+    backgroundColor: Colors.surface, borderRadius: 12, padding: 14,
+    borderWidth: 1, borderColor: Colors.border,
   },
-  trustLabel: { fontSize: 11, fontWeight: '600', color: Colors.textSecondary, textAlign: 'center' },
+  trustIcon: {
+    width: 44, height: 44, borderRadius: 22,
+    backgroundColor: Colors.primaryLight,
+    justifyContent: 'center', alignItems: 'center',
+  },
+  trustTitle: { fontSize: 12, fontWeight: '700', color: Colors.text, textAlign: 'center' },
+  trustSub: { fontSize: 10, color: Colors.textMuted, textAlign: 'center', lineHeight: 14 },
 });

@@ -200,13 +200,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center', alignItems: 'center',
     backgroundColor: Colors.surface,
   },
-  stepCircleActive: { borderColor: Colors.accent, backgroundColor: Colors.accent },
+  stepCircleActive: { borderColor: Colors.primary, backgroundColor: Colors.primary },
   stepNum: { fontSize: 13, fontWeight: '700', color: Colors.textMuted },
   stepNumActive: { color: Colors.white },
   stepLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '600' },
-  stepLabelActive: { color: Colors.accent },
+  stepLabelActive: { color: Colors.primary },
   stepLine: { flex: 1, height: 2, backgroundColor: Colors.border, marginBottom: 14 },
-  stepLineActive: { backgroundColor: Colors.accent },
+  stepLineActive: { backgroundColor: Colors.primary },
   scroll: { padding: 20 },
   section: {
     backgroundColor: Colors.surface, borderRadius: 12, padding: 16,
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   nextBtn: {
     flex: 1, flexDirection: 'row', justifyContent: 'center',
     alignItems: 'center', gap: 8,
-    backgroundColor: Colors.accent, borderRadius: 12, paddingVertical: 14,
+    backgroundColor: Colors.primary, borderRadius: 12, paddingVertical: 14,
   },
   nextBtnText: { color: Colors.white, fontSize: 16, fontWeight: '700' },
 });

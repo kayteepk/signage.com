@@ -11,7 +11,7 @@ import { mockOrders, Order } from '../constants/data';
 const statusConfig = {
   'Processing': { color: Colors.warning, icon: 'hourglass-empty' as const },
   'In Production': { color: '#3B82F6', icon: 'precision-manufacturing' as const },
-  'Shipped': { color: Colors.accent, icon: 'local-shipping' as const },
+  'Shipped': { color: Colors.primary, icon: 'local-shipping' as const },
   'Delivered': { color: Colors.success, icon: 'check-circle' as const },
 };
 
@@ -50,7 +50,7 @@ export default function OrdersScreen() {
                 <Text style={styles.orderTotal}>${item.total.toFixed(2)}</Text>
                 <View style={styles.detailLink}>
                   <Text style={styles.detailLinkText}>View details</Text>
-                  <MaterialIcons name="chevron-right" size={16} color={Colors.accent} />
+                  <MaterialIcons name="chevron-right" size={16} color={Colors.primary} />
                 </View>
               </View>
             </TouchableOpacity>
@@ -99,7 +99,7 @@ export default function OrdersScreen() {
                 {selected.items.map((item, i) => (
                   <View key={i} style={styles.detailItem}>
                     <View style={styles.detailItemIcon}>
-                      <MaterialIcons name="inventory" size={18} color={Colors.accent} />
+                      <MaterialIcons name="inventory" size={18} color={Colors.primary} />
                     </View>
                     <View style={{ flex: 1 }}>
                       <Text style={styles.detailItemName}>{item.name}</Text>
@@ -114,7 +114,7 @@ export default function OrdersScreen() {
                 <View style={styles.detailCard}>
                   <Text style={styles.detailCardTitle}>Tracking</Text>
                   <View style={styles.trackingRow}>
-                    <MaterialIcons name="local-shipping" size={20} color={Colors.accent} />
+                    <MaterialIcons name="local-shipping" size={20} color={Colors.primary} />
                     <Text style={styles.trackingNumber}>{selected.trackingNumber}</Text>
                   </View>
                 </View>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   orderFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   orderTotal: { fontSize: 16, fontWeight: '700', color: Colors.text },
   detailLink: { flexDirection: 'row', alignItems: 'center' },
-  detailLinkText: { fontSize: 13, color: Colors.accent, fontWeight: '600' },
+  detailLinkText: { fontSize: 13, color: Colors.primary, fontWeight: '600' },
   modal: { flex: 1, backgroundColor: Colors.background },
   modalHeader: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   detailItem: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10 },
   detailItemIcon: {
     width: 36, height: 36, borderRadius: 10,
-    backgroundColor: Colors.accent + '15',
+    backgroundColor: Colors.primary + '15',
     justifyContent: 'center', alignItems: 'center',
   },
   detailItemName: { fontSize: 14, fontWeight: '600', color: Colors.text },

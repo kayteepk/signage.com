@@ -102,7 +102,7 @@ export default function CartScreen({ navigation }: any) {
             </View>
             {total < 75 && (
               <View style={styles.freeShippingBanner}>
-                <MaterialIcons name="local-shipping" size={14} color={Colors.accent} />
+                <MaterialIcons name="local-shipping" size={14} color={Colors.primary} />
                 <Text style={styles.freeShippingText}>
                   Add ${(75 - total).toFixed(2)} more for free shipping
                 </Text>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   emptyTitle: { fontSize: 20, fontWeight: '700', color: Colors.text, marginTop: 16 },
   emptySubtitle: { fontSize: 14, color: Colors.textMuted, marginTop: 6, textAlign: 'center' },
   shopBtn: {
-    marginTop: 24, backgroundColor: Colors.accent,
+    marginTop: 24, backgroundColor: Colors.primary,
     paddingHorizontal: 28, paddingVertical: 14, borderRadius: 14,
   },
   shopBtnText: { color: Colors.white, fontWeight: '700', fontSize: 15 },
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', marginBottom: 4,
   },
   title: { fontSize: 22, fontWeight: '800', color: Colors.text },
-  clearBtn: { fontSize: 13, color: Colors.accent, fontWeight: '600' },
+  clearBtn: { fontSize: 13, color: Colors.primary, fontWeight: '600' },
   cartItem: {
     backgroundColor: Colors.surface, borderRadius: 12, padding: 12,
     flexDirection: 'row', gap: 12,
@@ -178,10 +178,10 @@ const styles = StyleSheet.create({
   summaryValue: { fontSize: 14, fontWeight: '600', color: Colors.text },
   freeShippingBanner: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: Colors.accent + '15', borderRadius: 8,
+    backgroundColor: Colors.primary + '15', borderRadius: 8,
     padding: 10,
   },
-  freeShippingText: { fontSize: 12, color: Colors.accent, fontWeight: '600' },
+  freeShippingText: { fontSize: 12, color: Colors.primary, fontWeight: '600' },
   totalRow: { borderTopWidth: 1, borderTopColor: Colors.border, paddingTop: 10 },
   totalLabel: { fontSize: 16, fontWeight: '700', color: Colors.text },
   totalValue: { fontSize: 20, fontWeight: '800', color: Colors.text },
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1, borderTopColor: Colors.border,
   },
   checkoutBtn: {
-    backgroundColor: Colors.accent, borderRadius: 14,
+    backgroundColor: Colors.primary, borderRadius: 14,
     paddingVertical: 16, flexDirection: 'row',
     justifyContent: 'center', alignItems: 'center', gap: 8,
   },
