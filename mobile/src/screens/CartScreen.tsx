@@ -50,7 +50,7 @@ export default function CartScreen({ navigation }: any) {
         }
         renderItem={({ item }) => (
           <View style={styles.cartItem}>
-            <Image source={{ uri: item.product.image }} style={styles.itemImage} />
+            <Image source={{ uri: item.product.images[0] }} style={styles.itemImage} />
             <View style={styles.itemInfo}>
               <Text style={styles.itemName}>{item.product.name}</Text>
               <Text style={styles.itemMeta}>{item.size} · {item.material}</Text>

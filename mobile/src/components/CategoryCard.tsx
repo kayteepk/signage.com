@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Colors } from '../constants/colors';
 import { Category } from '../constants/data';
 
@@ -11,46 +10,44 @@ interface Props {
 
 export default function CategoryCard({ category, onPress }: Props) {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
-      <View style={[styles.iconContainer, { backgroundColor: category.color + '18' }]}>
-        <MaterialIcons name={category.icon as any} size={26} color={category.color} />
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.85}>
+      <Image source={{ uri: category.image }} style={styles.image} resizeMode="cover" />
+      <View style={styles.overlay} />
+      <View style={styles.content}>
+        <Text style={styles.name}>{category.name}</Text>
+        <Text style={styles.count}>{category.count} products</Text>
       </View>
-      <Text style={styles.name}>{category.name}</Text>
-      <Text style={styles.count}>{category.count} products</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.surface,
+    width: 130,
+    height: 90,
     borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    elevation: 2,
-    minWidth: 90,
+    overflow: 'hidden',
   },
-  iconContainer: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
+  image: { width: '100%', height: '100%' },
+  overlay: {
+    position: 'absolute',
+    inset: 0,
+    backgroundColor: 'rgba(0,0,0,0.38)',
+  },
+  content: {
+    position: 'absolute',
+    bottom: 8,
+    left: 10,
+    right: 10,
   },
   name: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
-    color: Colors.text,
-    textAlign: 'center',
+    color: Colors.white,
   },
   count: {
     fontSize: 10,
-    color: Colors.textMuted,
-    marginTop: 2,
+    color: 'rgba(255,255,255,0.75)',
+    marginTop: 1,
   },
 });

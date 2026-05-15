@@ -1,36 +1,39 @@
 import React from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  StyleSheet, FlatList, StatusBar,
+  StyleSheet, FlatList, Image, StatusBar, TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { categories, products } from '../constants/data';
 import ProductCard from '../components/ProductCard';
-import CategoryCard from '../components/CategoryCard';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
 export default function HomeScreen({ navigation }: any) {
   const { itemCount } = useCart();
   const { user } = useAuth();
-  const popularProducts = products.filter(p => p.popular);
+
+  const newArrivals = products.filter(p => p.newArrival);
+  const bestSellers = products.filter(p => p.popular);
+  const featuredProduct = products[1]; // Retractable Banner Stand
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>
-              {user ? `Hello, ${user.name.split(' ')[0]}` : 'Welcome back'}
-            </Text>
-            <Text style={styles.tagline}>Custom signage at your fingertips</Text>
-          </View>
-          <TouchableOpacity style={styles.cartBtn} onPress={() => navigation.navigate('Cart')}>
-            <MaterialIcons name="shopping-cart" size={24} color={Colors.white} />
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.white} />
+
+      {/* Top bar */}
+      <View style={styles.topBar}>
+        <View>
+          <Text style={styles.logo}>Signage<Text style={styles.logoDot}>.com</Text></Text>
+        </View>
+        <View style={styles.topActions}>
+          <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Catalog')}>
+            <MaterialIcons name="search" size={24} color={Colors.text} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBtn} onPress={() => navigation.navigate('Cart')}>
+            <MaterialIcons name="shopping-bag" size={24} color={Colors.text} />
             {itemCount > 0 && (
               <View style={styles.cartBadge}>
                 <Text style={styles.cartBadgeText}>{itemCount}</Text>
@@ -38,37 +41,45 @@ export default function HomeScreen({ navigation }: any) {
             )}
           </TouchableOpacity>
         </View>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
+
+        {/* Search bar */}
+        <TouchableOpacity
+          style={styles.searchBar}
+          onPress={() => navigation.navigate('Catalog')}
+          activeOpacity={0.8}
+        >
+          <MaterialIcons name="search" size={20} color={Colors.textMuted} />
+          <Text style={styles.searchPlaceholder}>Search products...</Text>
+        </TouchableOpacity>
 
         {/* Hero Banner */}
         <View style={styles.hero}>
-          <View style={styles.heroContent}>
-            <Text style={styles.heroTitle}>Print Your Vision</Text>
-            <Text style={styles.heroSubtitle}>
-              Professional signage delivered fast. Free shipping on orders over $75.
-            </Text>
+          <Image
+            source={{ uri: 'https://picsum.photos/seed/hero-signage/800/420' }}
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+          <View style={styles.heroOverlay}>
+            <Text style={styles.heroEyebrow}>SPRING COLLECTION</Text>
+            <Text style={styles.heroTitle}>Make Your{'\n'}Brand Unmissable</Text>
             <TouchableOpacity
               style={styles.heroBtn}
               onPress={() => navigation.navigate('Catalog')}
             >
-              <Text style={styles.heroBtnText}>Shop All Products</Text>
-              <MaterialIcons name="arrow-forward" size={16} color={Colors.primary} />
+              <Text style={styles.heroBtnText}>Shop Now</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Stats Row */}
-        <View style={styles.statsRow}>
-          {[
-            { icon: 'local-shipping', label: 'Fast Shipping', value: '2-5 days' },
-            { icon: 'verified', label: 'Quality Guarantee', value: '100%' },
-            { icon: 'support-agent', label: 'Expert Support', value: '24/7' },
-          ].map((stat, i) => (
-            <View key={i} style={styles.statItem}>
-              <MaterialIcons name={stat.icon as any} size={22} color={Colors.accent} />
-              <Text style={styles.statValue}>{stat.value}</Text>
-              <Text style={styles.statLabel}>{stat.label}</Text>
-            </View>
-          ))}
+        {/* Free shipping banner */}
+        <View style={styles.shippingBanner}>
+          <MaterialIcons name="local-shipping" size={16} color={Colors.success} />
+          <Text style={styles.shippingBannerText}>
+            Free shipping on orders over <Text style={{ fontWeight: '700' }}>$75</Text>
+          </Text>
         </View>
 
         {/* Categories */}
@@ -84,27 +95,93 @@ export default function HomeScreen({ navigation }: any) {
             keyExtractor={c => c.id}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 20, gap: 12 }}
+            contentContainerStyle={styles.categoryList}
             renderItem={({ item }) => (
-              <CategoryCard
-                category={item}
+              <TouchableOpacity
+                style={styles.categoryCard}
                 onPress={() => navigation.navigate('Catalog', { category: item.name })}
-              />
+                activeOpacity={0.85}
+              >
+                <Image
+                  source={{ uri: item.image }}
+                  style={styles.categoryImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.categoryOverlay} />
+                <Text style={styles.categoryName}>{item.name}</Text>
+              </TouchableOpacity>
             )}
           />
         </View>
 
-        {/* Popular Products */}
+        {/* Featured Product */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Popular Products</Text>
+            <Text style={styles.sectionTitle}>Featured Product</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.featuredCard}
+            onPress={() => navigation.navigate('ProductDetail', { product: featuredProduct })}
+            activeOpacity={0.92}
+          >
+            <Image
+              source={{ uri: featuredProduct.images[0] }}
+              style={styles.featuredImage}
+              resizeMode="cover"
+            />
+            <View style={styles.featuredInfo}>
+              <Text style={styles.featuredCategory}>{featuredProduct.category}</Text>
+              <Text style={styles.featuredName}>{featuredProduct.name}</Text>
+              <Text style={styles.featuredDesc} numberOfLines={2}>
+                {featuredProduct.description}
+              </Text>
+              <View style={styles.featuredFooter}>
+                <Text style={styles.featuredPrice}>From ${featuredProduct.basePrice.toFixed(2)}</Text>
+                <View style={styles.featuredCta}>
+                  <Text style={styles.featuredCtaText}>Shop Now</Text>
+                  <MaterialIcons name="arrow-forward" size={14} color={Colors.white} />
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* New Arrivals */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>New Arrivals</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Catalog')}>
               <Text style={styles.seeAll}>See all</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.productGrid}>
-            {popularProducts.map(product => (
-              <View key={product.id} style={styles.productGridItem}>
+          <FlatList
+            data={newArrivals}
+            keyExtractor={p => p.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalList}
+            renderItem={({ item }) => (
+              <View style={{ width: 180 }}>
+                <ProductCard
+                  product={item}
+                  onPress={() => navigation.navigate('ProductDetail', { product: item })}
+                />
+              </View>
+            )}
+          />
+        </View>
+
+        {/* Best Sellers */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Best Sellers</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Catalog')}>
+              <Text style={styles.seeAll}>See all</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.grid}>
+            {bestSellers.map(product => (
+              <View key={product.id} style={styles.gridItem}>
                 <ProductCard
                   product={product}
                   onPress={() => navigation.navigate('ProductDetail', { product })}
@@ -114,130 +191,189 @@ export default function HomeScreen({ navigation }: any) {
           </View>
         </View>
 
-        {/* How It Works */}
-        <View style={[styles.section, styles.howItWorksSection]}>
-          <Text style={[styles.sectionTitle, { color: Colors.white, marginBottom: 20 }]}>
-            How It Works
-          </Text>
+        {/* Trust Badges */}
+        <View style={styles.trustRow}>
           {[
-            { step: '1', icon: 'photo-library', title: 'Upload Your Design', desc: 'Upload artwork or use our online editor' },
-            { step: '2', icon: 'tune', title: 'Choose Options', desc: 'Select size, material, and quantity' },
-            { step: '3', icon: 'local-shipping', title: 'We Print & Ship', desc: 'Fast production and free shipping over $75' },
-          ].map((item, i) => (
-            <View key={i} style={styles.howStep}>
-              <View style={styles.howStepNum}>
-                <Text style={styles.howStepNumText}>{item.step}</Text>
-              </View>
-              <View style={styles.howStepIcon}>
-                <MaterialIcons name={item.icon as any} size={22} color={Colors.accent} />
-              </View>
-              <View style={styles.howStepText}>
-                <Text style={styles.howStepTitle}>{item.title}</Text>
-                <Text style={styles.howStepDesc}>{item.desc}</Text>
-              </View>
+            { icon: 'verified', label: 'Quality Guarantee' },
+            { icon: 'local-shipping', label: 'Fast Delivery' },
+            { icon: 'replay', label: 'Easy Reorders' },
+            { icon: 'support-agent', label: '24/7 Support' },
+          ].map((b, i) => (
+            <View key={i} style={styles.trustItem}>
+              <MaterialIcons name={b.icon as any} size={22} color={Colors.accent} />
+              <Text style={styles.trustLabel}>{b.label}</Text>
             </View>
           ))}
         </View>
 
-        <View style={{ height: 20 }} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
-  header: {
+  container: { flex: 1, backgroundColor: Colors.white },
+  topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+    backgroundColor: Colors.white,
   },
-  greeting: { fontSize: 20, fontWeight: '700', color: Colors.white },
-  tagline: { fontSize: 13, color: 'rgba(255,255,255,0.7)', marginTop: 2 },
-  cartBtn: {
-    width: 44, height: 44, borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    justifyContent: 'center', alignItems: 'center',
-  },
+  logo: { fontSize: 22, fontWeight: '800', color: Colors.text, letterSpacing: -0.5 },
+  logoDot: { color: Colors.accent },
+  topActions: { flexDirection: 'row', gap: 4 },
+  iconBtn: { padding: 6, position: 'relative' },
   cartBadge: {
-    position: 'absolute', top: -2, right: -2,
-    backgroundColor: Colors.accent, borderRadius: 9,
-    minWidth: 18, height: 18,
+    position: 'absolute', top: 2, right: 2,
+    backgroundColor: Colors.accent,
+    borderRadius: 8, minWidth: 16, height: 16,
     justifyContent: 'center', alignItems: 'center',
   },
-  cartBadgeText: { color: Colors.white, fontSize: 10, fontWeight: '700' },
-  hero: {
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-  },
-  heroContent: {
-    backgroundColor: Colors.accent,
-    borderRadius: 16,
-    padding: 22,
-  },
-  heroTitle: { fontSize: 26, fontWeight: '800', color: Colors.white },
-  heroSubtitle: { fontSize: 13, color: 'rgba(255,255,255,0.85)', marginTop: 6, lineHeight: 20 },
-  heroBtn: {
-    flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: Colors.white, borderRadius: 25,
-    paddingVertical: 10, paddingHorizontal: 18,
-    alignSelf: 'flex-start', marginTop: 16,
-  },
-  heroBtnText: { color: Colors.primary, fontWeight: '700', fontSize: 14 },
-  statsRow: {
+  cartBadgeText: { color: Colors.white, fontSize: 9, fontWeight: '800' },
+
+  searchBar: {
     flexDirection: 'row',
-    backgroundColor: Colors.surface,
-    marginHorizontal: 20,
-    marginTop: -1,
-    borderRadius: 12,
-    padding: 16,
-    gap: 8,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 5,
-    marginBottom: 8,
+    alignItems: 'center',
+    gap: 10,
+    marginHorizontal: 16,
+    marginTop: 14,
+    marginBottom: 16,
+    backgroundColor: Colors.surfaceAlt,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    height: 44,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
-  statItem: { flex: 1, alignItems: 'center', gap: 4 },
-  statValue: { fontSize: 14, fontWeight: '700', color: Colors.text },
-  statLabel: { fontSize: 10, color: Colors.textMuted, textAlign: 'center' },
-  section: { marginTop: 24 },
+  searchPlaceholder: { fontSize: 14, color: Colors.textMuted },
+
+  hero: {
+    marginHorizontal: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+    height: 220,
+  },
+  heroImage: { width: '100%', height: '100%' },
+  heroOverlay: {
+    position: 'absolute', inset: 0,
+    backgroundColor: 'rgba(0,0,0,0.42)',
+    padding: 22,
+    justifyContent: 'flex-end',
+  },
+  heroEyebrow: {
+    fontSize: 10, fontWeight: '700', color: Colors.accent,
+    letterSpacing: 2, marginBottom: 6,
+  },
+  heroTitle: {
+    fontSize: 26, fontWeight: '800', color: Colors.white,
+    lineHeight: 32, marginBottom: 16,
+  },
+  heroBtn: {
+    backgroundColor: Colors.white,
+    paddingHorizontal: 20, paddingVertical: 10,
+    borderRadius: 8, alignSelf: 'flex-start',
+  },
+  heroBtnText: { color: Colors.text, fontWeight: '700', fontSize: 13 },
+
+  shippingBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 10,
+    marginHorizontal: 16,
+    marginTop: 14,
+    backgroundColor: '#F0FDF4',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#D1FAE5',
+  },
+  shippingBannerText: { fontSize: 13, color: Colors.success },
+
+  section: { marginTop: 28 },
   sectionHeader: {
-    flexDirection: 'row', justifyContent: 'space-between',
-    alignItems: 'center', paddingHorizontal: 20, marginBottom: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 14,
   },
   sectionTitle: { fontSize: 18, fontWeight: '700', color: Colors.text },
   seeAll: { fontSize: 13, color: Colors.accent, fontWeight: '600' },
-  productGrid: {
-    flexDirection: 'row', flexWrap: 'wrap',
-    paddingHorizontal: 20, gap: 12,
+
+  categoryList: { paddingHorizontal: 16, gap: 10 },
+  categoryCard: {
+    width: 110, height: 80,
+    borderRadius: 10,
+    overflow: 'hidden',
+    position: 'relative',
   },
-  productGridItem: { width: '47%' },
-  howItWorksSection: {
-    backgroundColor: Colors.primary,
-    marginHorizontal: 20,
-    borderRadius: 16,
-    padding: 20,
+  categoryImage: { width: '100%', height: '100%' },
+  categoryOverlay: {
+    position: 'absolute', inset: 0,
+    backgroundColor: 'rgba(0,0,0,0.38)',
   },
-  howStep: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, gap: 12 },
-  howStepNum: {
-    width: 28, height: 28, borderRadius: 14,
+  categoryName: {
+    position: 'absolute',
+    bottom: 8, left: 8, right: 8,
+    fontSize: 12, fontWeight: '700',
+    color: Colors.white,
+  },
+
+  featuredCard: {
+    marginHorizontal: 16,
+    borderRadius: 14,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  featuredImage: { width: '100%', height: 200 },
+  featuredInfo: { padding: 16 },
+  featuredCategory: {
+    fontSize: 10, color: Colors.textMuted,
+    fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4,
+  },
+  featuredName: { fontSize: 18, fontWeight: '700', color: Colors.text, marginBottom: 6 },
+  featuredDesc: { fontSize: 13, color: Colors.textSecondary, lineHeight: 19, marginBottom: 14 },
+  featuredFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  featuredPrice: { fontSize: 16, fontWeight: '700', color: Colors.text },
+  featuredCta: {
+    flexDirection: 'row', alignItems: 'center', gap: 4,
     backgroundColor: Colors.accent,
-    justifyContent: 'center', alignItems: 'center',
+    paddingHorizontal: 14, paddingVertical: 8, borderRadius: 8,
   },
-  howStepNumText: { color: Colors.white, fontWeight: '700', fontSize: 13 },
-  howStepIcon: {
-    width: 44, height: 44, borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    justifyContent: 'center', alignItems: 'center',
+  featuredCtaText: { color: Colors.white, fontWeight: '700', fontSize: 13 },
+
+  horizontalList: { paddingHorizontal: 16, gap: 12 },
+
+  grid: {
+    flexDirection: 'row', flexWrap: 'wrap',
+    paddingHorizontal: 16, gap: 12,
   },
-  howStepText: { flex: 1 },
-  howStepTitle: { fontSize: 14, fontWeight: '700', color: Colors.white },
-  howStepDesc: { fontSize: 12, color: 'rgba(255,255,255,0.7)', marginTop: 2 },
+  gridItem: { width: '47.5%' },
+
+  trustRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: 16,
+    marginTop: 28,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  trustItem: {
+    width: '50%',
+    alignItems: 'center',
+    paddingVertical: 16,
+    gap: 6,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: Colors.border,
+  },
+  trustLabel: { fontSize: 11, fontWeight: '600', color: Colors.textSecondary, textAlign: 'center' },
 });
