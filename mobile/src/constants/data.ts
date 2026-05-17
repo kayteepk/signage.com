@@ -53,14 +53,14 @@ export interface Order {
 }
 
 export const categories: Category[] = [
-  { id: '1', name: 'Neon Signs',       icon: 'highlight',       count: 8,  image: 'https://picsum.photos/seed/cat-neon/400/260' },
-  { id: '2', name: 'LED Signs',        icon: 'lightbulb',       count: 6,  image: 'https://picsum.photos/seed/cat-led/400/260' },
-  { id: '3', name: 'Channel Letters',  icon: 'text-fields',     count: 5,  image: 'https://picsum.photos/seed/cat-channel/400/260' },
-  { id: '4', name: 'Outdoor Signs',    icon: 'storefront',      count: 7,  image: 'https://picsum.photos/seed/cat-outdoor/400/260' },
-  { id: '5', name: 'Indoor Signs',     icon: 'meeting-room',    count: 6,  image: 'https://picsum.photos/seed/cat-indoor/400/260' },
-  { id: '6', name: 'Lobby & Office',   icon: 'business',        count: 5,  image: 'https://picsum.photos/seed/cat-lobby/400/260' },
-  { id: '7', name: 'Illuminated',      icon: 'wb-incandescent', count: 4,  image: 'https://picsum.photos/seed/cat-illuminated/400/260' },
-  { id: '8', name: 'Custom Shapes',    icon: 'category',        count: 3,  image: 'https://picsum.photos/seed/cat-shapes/400/260' },
+  { id: '1', name: 'Neon Signs',       icon: 'highlight',       count: 8,  image: 'https://images.unsplash.com/photo-1567818735868-e71b99932e29?auto=format&fit=crop&w=800&h=600&q=80' },
+  { id: '2', name: 'LED Signs',        icon: 'lightbulb',       count: 6,  image: 'https://images.unsplash.com/photo-1503602642199-491bbbc08c25?auto=format&fit=crop&w=800&h=600&q=80' },
+  { id: '3', name: 'Channel Letters',  icon: 'text-fields',     count: 5,  image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&h=600&q=80' },
+  { id: '4', name: 'Outdoor Signs',    icon: 'storefront',      count: 7,  image: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&h=600&q=80' },
+  { id: '5', name: 'Indoor Signs',     icon: 'meeting-room',    count: 6,  image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&h=600&q=80' },
+  { id: '6', name: 'Lobby & Office',   icon: 'business',        count: 5,  image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&h=600&q=80' },
+  { id: '7', name: 'Illuminated',      icon: 'wb-incandescent', count: 4,  image: 'https://images.unsplash.com/photo-1518893494013-a8f1f5b8c20e?auto=format&fit=crop&w=800&h=600&q=80' },
+  { id: '8', name: 'Custom Shapes',    icon: 'category',        count: 3,  image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&h=600&q=80' },
 ];
 
 export const products: Product[] = [
@@ -71,9 +71,9 @@ export const products: Product[] = [
     category: 'Neon Signs',
     basePrice: 89.99,
     images: [
-      'https://picsum.photos/seed/neon1-a/800/600',
-      'https://picsum.photos/seed/neon1-b/800/600',
-      'https://picsum.photos/seed/neon1-c/800/600',
+      'https://images.unsplash.com/photo-1567818735868-e71b99932e29?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1564596730180-3a6b39f5e2a5?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1518893494013-a8f1f5b8c20e?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Make your space unforgettable with a fully custom LED neon sign. Built with flexible LED neon flex tubing on a clear or black acrylic backing, these signs deliver the iconic glow of traditional neon at a fraction of the energy cost. Perfect for bars, restaurants, studios, retail stores, and events.',
@@ -106,9 +106,9 @@ export const products: Product[] = [
     category: 'Neon Signs',
     basePrice: 119.99,
     images: [
-      'https://picsum.photos/seed/neon2-a/800/600',
-      'https://picsum.photos/seed/neon2-b/800/600',
-      'https://picsum.photos/seed/neon2-c/800/600',
+      'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Draw in customers from the street with a vivid bar or restaurant neon sign. Pre-designed layouts include Open, Bar, Coffee, Beer, and Wine, or go fully custom. Includes wall-mount hardware and a 6-foot power cord.',
@@ -140,9 +140,9 @@ export const products: Product[] = [
     category: 'Neon Signs',
     basePrice: 99.99,
     images: [
-      'https://picsum.photos/seed/neon3-a/800/600',
-      'https://picsum.photos/seed/neon3-b/800/600',
-      'https://picsum.photos/seed/neon3-c/800/600',
+      'https://images.unsplash.com/photo-1519741347686-09346d55e27a?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1464366400600-ac4f90369e58?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Create a show-stopping focal point for weddings, birthdays, and corporate events. Choose from romantic script phrases or upload your own design. Lightweight, safe for indoor use, and battery-operable for venues without nearby outlets.',
@@ -174,9 +174,9 @@ export const products: Product[] = [
     category: 'Neon Signs',
     basePrice: 149.99,
     images: [
-      'https://picsum.photos/seed/neon4-a/800/600',
-      'https://picsum.photos/seed/neon4-b/800/600',
-      'https://picsum.photos/seed/neon4-c/800/600',
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1553531384-cc64ac80f931?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Turn your brand logo into a glowing neon masterpiece. Our designers hand-trace your artwork and craft each piece to match your exact logo shape. Available in multi-color configurations for complex logos.',
@@ -210,9 +210,9 @@ export const products: Product[] = [
     category: 'LED Signs',
     basePrice: 179.99,
     images: [
-      'https://picsum.photos/seed/led1-a/800/600',
-      'https://picsum.photos/seed/led1-b/800/600',
-      'https://picsum.photos/seed/led1-c/800/600',
+      'https://images.unsplash.com/photo-1503602642199-491bbbc08c25?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Slim-profile LED lightbox signs create even, edge-to-edge illumination that makes your graphics pop day and night. The snap-open aluminum frame allows graphic changes in seconds without tools — ideal for menus, promotions, and directories.',
@@ -242,9 +242,9 @@ export const products: Product[] = [
     category: 'LED Signs',
     basePrice: 139.99,
     images: [
-      'https://picsum.photos/seed/led2-a/800/600',
-      'https://picsum.photos/seed/led2-b/800/600',
-      'https://picsum.photos/seed/led2-c/800/600',
+      'https://images.unsplash.com/photo-1467103789599-5e54b5dec19f?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1502945015378-0e284ca1a5be?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Update your message anytime with a programmable LED scrolling sign. High-brightness LEDs are visible from 150+ feet in direct sunlight. Program via USB or free smartphone app with 200+ animation effects.',
@@ -277,9 +277,9 @@ export const products: Product[] = [
     category: 'Channel Letters',
     basePrice: 299.99,
     images: [
-      'https://picsum.photos/seed/channel1-a/800/600',
-      'https://picsum.photos/seed/channel1-b/800/600',
-      'https://picsum.photos/seed/channel1-c/800/600',
+      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Front-lit channel letters are the gold standard for storefront signage. Each letter is individually fabricated from aluminum with a colored acrylic face and internal LED modules that provide brilliant, even illumination visible from a distance.',
@@ -312,9 +312,9 @@ export const products: Product[] = [
     category: 'Channel Letters',
     basePrice: 349.99,
     images: [
-      'https://picsum.photos/seed/channel2-a/800/600',
-      'https://picsum.photos/seed/channel2-b/800/600',
-      'https://picsum.photos/seed/channel2-c/800/600',
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Halo-lit (reverse-lit) channel letters project a dramatic glowing halo onto the mounting wall, creating a luxurious, upscale look. Favored by high-end retail, hotels, and corporate headquarters.',
@@ -348,9 +348,9 @@ export const products: Product[] = [
     category: 'Outdoor Signs',
     basePrice: 399.99,
     images: [
-      'https://picsum.photos/seed/outdoor1-a/800/600',
-      'https://picsum.photos/seed/outdoor1-b/800/600',
-      'https://picsum.photos/seed/outdoor1-c/800/600',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Make a bold first impression at your property entrance with a custom aluminum monument sign. Powder-coated for maximum weather resistance, these signs are built to withstand years of outdoor exposure without fading, rusting, or cracking.',
@@ -382,9 +382,9 @@ export const products: Product[] = [
     category: 'Outdoor Signs',
     basePrice: 259.99,
     images: [
-      'https://picsum.photos/seed/outdoor2-a/800/600',
-      'https://picsum.photos/seed/outdoor2-b/800/600',
-      'https://picsum.photos/seed/outdoor2-c/800/600',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'High-visibility pylon sign panels are engineered for pole-mounted roadside signage. The .080" aluminum substrate resists wind loads and UV degradation, keeping your message vivid and readable from highway speeds.',
@@ -414,9 +414,9 @@ export const products: Product[] = [
     category: 'Outdoor Signs',
     basePrice: 79.99,
     images: [
-      'https://picsum.photos/seed/outdoor3-a/800/600',
-      'https://picsum.photos/seed/outdoor3-b/800/600',
-      'https://picsum.photos/seed/outdoor3-c/800/600',
+      'https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Dibond aluminum composite signs combine the rigidity of aluminum with a lightweight core, making them perfect for outdoor storefronts, fences, and post-mount applications. Flat-panel design with a sleek professional finish.',
@@ -450,9 +450,9 @@ export const products: Product[] = [
     category: 'Indoor Signs',
     basePrice: 49.99,
     images: [
-      'https://picsum.photos/seed/indoor1-a/800/600',
-      'https://picsum.photos/seed/indoor1-b/800/600',
-      'https://picsum.photos/seed/indoor1-c/800/600',
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Meet ADA compliance requirements with our tactile room identification signs. Features Grade 2 Braille, raised lettering, and non-glare finishes as required by the Americans with Disabilities Act. Ideal for offices, hospitals, schools, and public buildings.',
@@ -483,9 +483,9 @@ export const products: Product[] = [
     category: 'Indoor Signs',
     basePrice: 69.99,
     images: [
-      'https://picsum.photos/seed/indoor2-a/800/600',
-      'https://picsum.photos/seed/indoor2-b/800/600',
-      'https://picsum.photos/seed/indoor2-c/800/600',
+      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Guide visitors effortlessly through your facility with custom wayfinding signs. Modular systems allow you to stack multiple directional arrows and department names on a single post, keeping your space organized and professional.',
@@ -518,9 +518,9 @@ export const products: Product[] = [
     category: 'Lobby & Office',
     basePrice: 249.99,
     images: [
-      'https://picsum.photos/seed/lobby1-a/800/600',
-      'https://picsum.photos/seed/lobby1-b/800/600',
-      'https://picsum.photos/seed/lobby1-c/800/600',
+      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Make a lasting impression in your reception area with a stunning 3D dimensional lobby sign. Precision-cut from brushed aluminum or acrylic and mounted with standoffs for a floating effect, these signs radiate professionalism and brand pride.',
@@ -552,9 +552,9 @@ export const products: Product[] = [
     category: 'Lobby & Office',
     basePrice: 24.99,
     images: [
-      'https://picsum.photos/seed/lobby2-a/800/600',
-      'https://picsum.photos/seed/lobby2-b/800/600',
-      'https://picsum.photos/seed/lobby2-c/800/600',
+      'https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Sleek and modern acrylic nameplates for desks, doors, and walls. Available in clear, frosted, or colored acrylic with engraved or UV-printed text. Magnetic backing or adhesive options allow tool-free installation.',
@@ -588,9 +588,9 @@ export const products: Product[] = [
     category: 'Illuminated',
     basePrice: 319.99,
     images: [
-      'https://picsum.photos/seed/illum1-a/800/600',
-      'https://picsum.photos/seed/illum1-b/800/600',
-      'https://picsum.photos/seed/illum1-c/800/600',
+      'https://images.unsplash.com/photo-1518893494013-a8f1f5b8c20e?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1503602642199-491bbbc08c25?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1564596730180-3a6b39f5e2a5?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Backlit SEG (Silicone Edge Graphic) fabric displays create a stunning illuminated wall of imagery perfect for trade shows, retail environments, and event backdrops. The dye-sublimation fabric graphic snaps into the aluminum frame for a seamless, wrinkle-free look.',
@@ -620,9 +620,9 @@ export const products: Product[] = [
     category: 'Illuminated',
     basePrice: 489.99,
     images: [
-      'https://picsum.photos/seed/illum2-a/800/600',
-      'https://picsum.photos/seed/illum2-b/800/600',
-      'https://picsum.photos/seed/illum2-c/800/600',
+      'https://images.unsplash.com/photo-1502945015378-0e284ca1a5be?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1518893494013-a8f1f5b8c20e?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1503602642199-491bbbc08c25?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Single and double-faced illuminated cabinet signs are the most versatile commercial sign product available. Welded aluminum cabinets house energy-efficient LED packs behind translucent acrylic faces printed with your graphics.',
@@ -654,9 +654,9 @@ export const products: Product[] = [
     category: 'Custom Shapes',
     basePrice: 59.99,
     images: [
-      'https://picsum.photos/seed/shape1-a/800/600',
-      'https://picsum.photos/seed/shape1-b/800/600',
-      'https://picsum.photos/seed/shape1-c/800/600',
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1564596730180-3a6b39f5e2a5?auto=format&fit=crop&w=800&h=600&q=80',
+      'https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?auto=format&fit=crop&w=800&h=600&q=80',
     ],
     description:
       'Go beyond the rectangle with a custom-cut acrylic sign in any shape you can imagine. CNC-routed from premium cast acrylic with polished edges, these signs are perfect for logo cutouts, mascots, unique store décor, and branded installations.',

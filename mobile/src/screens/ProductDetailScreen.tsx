@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import {
   View, Text, ScrollView, Image, TouchableOpacity, StyleSheet,
-  Alert, FlatList, Dimensions, NativeSyntheticEvent, NativeScrollEvent,
+  Alert, FlatList, Dimensions, NativeSyntheticEvent, NativeScrollEvent, TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -10,6 +10,7 @@ import { Colors } from '../constants/colors';
 import { Product, mockReviews } from '../constants/data';
 import { useCart } from '../context/CartContext';
 import ReviewCard from '../components/ReviewCard';
+import SignMockup, { FontChoice } from '../components/SignMockup';
 
 const { width: W } = Dimensions.get('window');
 
@@ -53,6 +54,8 @@ export default function ProductDetailScreen({ navigation, route }: any) {
   const [qty,          setQty]          = useState(1);
   const [artworkUri,   setArtworkUri]   = useState<string>();
   const [wishlist,     setWishlist]     = useState(false);
+  const [customText,    setCustomText]    = useState('');
+  const [selectedFont,  setSelectedFont]  = useState<FontChoice>('sans');
   const [descOpen,     setDescOpen]     = useState(false);
   const [featOpen,     setFeatOpen]     = useState(false);
   const [shippingOpen, setShippingOpen] = useState(false);
@@ -248,16 +251,76 @@ export default function ProductDetailScreen({ navigation, route }: any) {
 
           <View style={s.divider} />
 
-          {/* Artwork upload */}
+          {/* Design Your Sign */}
           <View style={s.optSection}>
-            <Text style={s.optLabel}>Upload Artwork</Text>
+            <Text style={s.optLabel}>Design Your Sign</Text>
+            <Text style={s.designHint}>Type your text to see a live mockup, or upload a logo/artwork file.</Text>
+
+            {/* Text input */}
+            <View style={s.designInputWrap}>
+              <MaterialIcons name="text-fields" size={18} color={Colors.textMuted} />
+              <TextInput
+                style={s.designInput}
+                placeholder="Enter your text or business name…"
+                placeholderTextColor={Colors.textMuted}
+                value={customText}
+                onChangeText={setCustomText}
+                maxLength={60}
+                returnKeyType="done"
+              />
+              {customText.length > 0 && (
+                <TouchableOpacity onPress={() => setCustomText('')}>
+                  <MaterialIcons name="close" size={16} color={Colors.textMuted} />
+                </TouchableOpacity>
+              )}
+            </View>
+            <Text style={s.charCount}>{customText.length}/60 characters</Text>
+
+            {/* Font picker */}
+            <Text style={s.subOptLabel}>Font Style</Text>
+            <View style={s.fontRow}>
+              {([
+                { key: 'sans',   label: 'Modern' },
+                { key: 'block',  label: 'BOLD'   },
+                { key: 'script', label: 'Script' },
+                { key: 'serif',  label: 'Classic'},
+              ] as { key: FontChoice; label: string }[]).map(f => (
+                <TouchableOpacity
+                  key={f.key}
+                  style={[s.fontChip, selectedFont === f.key && s.fontChipActive]}
+                  onPress={() => setSelectedFont(f.key)}
+                >
+                  <Text style={[s.fontChipText, selectedFont === f.key && s.fontChipTextActive,
+                    f.key === 'script' ? { fontStyle: 'italic' } : {},
+                    f.key === 'block'  ? { fontWeight: '900', letterSpacing: 1 } : {},
+                    f.key === 'serif'  ? { fontFamily: 'Georgia' } : {},
+                  ]}>
+                    {f.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Mockup preview */}
+            <View style={s.mockupContainer}>
+              <SignMockup
+                product={product}
+                customText={customText}
+                colorHex={selColor.hex}
+                font={selectedFont}
+                logoUri={artworkUri}
+              />
+            </View>
+
+            {/* Upload logo / artwork */}
+            <Text style={s.subOptLabel}>Upload Logo or Artwork File</Text>
             <TouchableOpacity style={s.uploadBox} onPress={pickArtwork} activeOpacity={0.8}>
               {artworkUri ? (
                 <View style={{ alignItems: 'center', gap: 8 }}>
                   <Image source={{ uri: artworkUri }} style={s.artworkPreview} resizeMode="contain" />
                   <View style={s.artworkMeta}>
                     <MaterialIcons name="check-circle" size={15} color={Colors.success} />
-                    <Text style={s.artworkOk}>Artwork uploaded</Text>
+                    <Text style={s.artworkOk}>File uploaded</Text>
                     <TouchableOpacity onPress={() => setArtworkUri(undefined)}>
                       <Text style={s.artworkRemove}>Remove</Text>
                     </TouchableOpacity>
@@ -268,8 +331,8 @@ export default function ProductDetailScreen({ navigation, route }: any) {
                   <View style={s.uploadIconWrap}>
                     <MaterialIcons name="cloud-upload" size={28} color={Colors.primary} />
                   </View>
-                  <Text style={s.uploadTitle}>Tap to upload your design</Text>
-                  <Text style={s.uploadSub}>PNG, JPG, PDF · 300 DPI recommended</Text>
+                  <Text style={s.uploadTitle}>Tap to upload your design file</Text>
+                  <Text style={s.uploadSub}>PNG, JPG, PDF, AI · 300 DPI recommended</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -517,4 +580,24 @@ const s = StyleSheet.create({
     backgroundColor: Colors.primary, borderRadius: 12, paddingVertical: 15,
   },
   addBtnText: { color: Colors.white, fontSize: 16, fontWeight: '800' },
+  designHint: { fontSize: 13, color: Colors.textMuted, lineHeight: 18, marginTop: -4 },
+  designInputWrap: {
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    borderWidth: 1.5, borderColor: Colors.border, borderRadius: 10,
+    paddingHorizontal: 12, paddingVertical: 10,
+    backgroundColor: Colors.surface,
+  },
+  designInput: { flex: 1, fontSize: 15, color: Colors.text },
+  charCount: { fontSize: 11, color: Colors.textMuted, textAlign: 'right', marginTop: -6 },
+  subOptLabel: { fontSize: 13, fontWeight: '700', color: Colors.textSecondary },
+  fontRow: { flexDirection: 'row', gap: 8 },
+  fontChip: {
+    flex: 1, paddingVertical: 10, borderRadius: 8,
+    borderWidth: 1.5, borderColor: Colors.border,
+    alignItems: 'center', backgroundColor: Colors.surface,
+  },
+  fontChipActive: { borderColor: Colors.text, backgroundColor: Colors.text },
+  fontChipText: { fontSize: 13, fontWeight: '600', color: Colors.textSecondary },
+  fontChipTextActive: { color: Colors.white },
+  mockupContainer: { borderRadius: 12, overflow: 'hidden' },
 });
